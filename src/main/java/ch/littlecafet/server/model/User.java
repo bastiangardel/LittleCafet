@@ -17,21 +17,23 @@ public class User {
     private String firstName;
     private String lastName;
     private String username;
+    private String rfid;
 
     protected User() {}
 
-    public User(String firstName, String lastName, String username) {
+    public User(String firstName, String lastName, String username,String rfid) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
+        this.rfid = rfid;
     }
 
 
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, firstName='%s', lastName='%s', username='%s']",
-                id, firstName, lastName, username);
+                "User[id=%d, firstName='%s', lastName='%s', username='%s', rfid='%s' ]",
+                id, firstName, lastName, username,rfid);
     }
 
 }

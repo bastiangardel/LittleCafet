@@ -22,11 +22,11 @@ public class LittlecafetApplication {
 	public CommandLineRunner demo(UserRepository repository) {
 		return (args) -> {
 
-			repository.save(new User("Jack", "Bauer", "test1"));
-			repository.save(new User("Chloe", "O'Brian", "test2"));
-			repository.save(new User("Kim", "Bauer", "test3"));
-			repository.save(new User("David", "Palmer", "test4"));
-			repository.save(new User("Michelle", "Dessler", "test5"));
+			repository.save(new User("Jack", "Bauer", "test1", ""));
+			repository.save(new User("Chloe", "O'Brian", "test2",""));
+			repository.save(new User("Kim", "Bauer", "test3",""));
+			repository.save(new User("David", "Palmer", "test4",""));
+			repository.save(new User("Michelle", "Dessler", "test5",""));
 
 
 			// fetch all customers
