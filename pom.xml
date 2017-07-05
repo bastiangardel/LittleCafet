@@ -6,7 +6,7 @@
     <artifactId>littlecafet</artifactId>
     <version>0.1-SNAPSHOT</version>
 
-    <name>Spring Boot + Shiro + MySQL powered REST app</name>
+    <name>LittleCafet Server</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
