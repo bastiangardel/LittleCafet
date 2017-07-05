@@ -188,7 +188,7 @@ public class ReceiptController {
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
 
-        if (receipt.getAmount() > user.getAmount())
+        if (receipt.getAmount() > user.getSolde())
             throw new NotEnoughMoneyException("You have not enough money in your account!!");
 
 
@@ -197,11 +197,11 @@ public class ReceiptController {
         listreceipt.add(receipt);
         receipt.setPaid(true);
 
-        user.setAmount(user.getAmount() - receipt.getAmount());
+        user.setSolde(user.getSolde() - receipt.getAmount());
 
         receipt.setPaiyedBy(user);
 
-        owner.setAmount(owner.getAmount() + receipt.getAmount());
+        owner.setSolde(owner.getSolde() + receipt.getAmount());
 
         List<Receipt> list = user.getReceiptHistory();
         list.add(receipt);

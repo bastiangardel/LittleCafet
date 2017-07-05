@@ -106,8 +106,8 @@ public class UserController {
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + username);
 
-        Double amount = user.getAmount();
-        user.setAmount(amount + credit);
+        Double amount = user.getSolde();
+        user.setSolde(amount + credit);
 
         userRepo.save(user);
 
@@ -125,11 +125,11 @@ public class UserController {
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + username);
 
-        if (debit > user.getAmount())
+        if (debit > user.getSolde())
             throw new NotEnoughMoneyDebitException("There is not enough money in this account!!");
 
-        Double amount = user.getAmount();
-        user.setAmount(amount - debit);
+        Double amount = user.getSolde();
+        user.setSolde(amount - debit);
 
         return new SuccessMessageDTO("Debit with Success");
     }
@@ -186,7 +186,7 @@ public class UserController {
         user.setName("Paulo Pires");
         user.setPassword(passwordService.encryptPassword("test"));
         user.getRoles().add(roleAdmin);
-        user.setAmount(100.0);
+        user.setSolde(100.0);
         userRepo.save(user);
 
         final User user2 = new User();
@@ -196,7 +196,7 @@ public class UserController {
         user2.setName("Bastian Gardel");
         user2.setPassword(passwordService.encryptPassword("test"));
         user2.getRoles().add(roleSeller);
-        user2.setAmount(100.0);
+        user2.setSolde(100.0);
 
         User usercheckout = userRepo.save(user2);
 
@@ -207,7 +207,7 @@ public class UserController {
         user3.setName("David Dupont");
         user3.setPassword(passwordService.encryptPassword("test"));
         user3.getRoles().add(roleSeller);
-        user3.setAmount(100.0);
+        user3.setSolde(100.0);
         userRepo.save(user3);
 
         CheckOut checkOut = new CheckOut();

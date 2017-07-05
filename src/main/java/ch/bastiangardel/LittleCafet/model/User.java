@@ -51,7 +51,7 @@ public class User {
     private Boolean active;
     private String password;
     @JsonView(View.Summary.class)
-    private Double  amount;
+    private Double solde;
 
     @JsonView(View.Summary.class)
     @ManyToMany
@@ -134,12 +134,12 @@ public class User {
         this.roles = roles;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getSolde() {
+        return solde;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setSolde(Double solde) {
+        this.solde = solde;
     }
 
     public List<Receipt> getReceiptHistory() {
@@ -164,9 +164,9 @@ public class User {
         this.checkoutInPossesion = checkoutInPossesion;
     }
 
-    public User(Boolean active, Double amount, List<CheckOut> checkoutInPossesion, String email, String name, String password, List<Receipt> receiptHistory, List<Role> roles) {
+    public User(Boolean active, Double solde, List<CheckOut> checkoutInPossesion, String email, String name, String password, List<Receipt> receiptHistory, List<Role> roles) {
         this.active = active;
-        this.amount = amount;
+        this.solde = solde;
         this.checkoutInPossesion = checkoutInPossesion;
         this.email = email;
         this.name = name;
