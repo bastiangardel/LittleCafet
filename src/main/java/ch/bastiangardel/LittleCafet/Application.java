@@ -41,7 +41,7 @@ public class Application {
                 });
 
         new SpringApplicationBuilder()
-                .sources(Application.class)
+                .sources(Application.class,ShiroConfiguration.class)
                 .run(args);
     }
 
@@ -79,7 +79,6 @@ public class Application {
                 .title("EasyPay API")
                 .description("Système de paiement mobile")
                 .termsOfServiceUrl("http://springfox.io")
-                .contact("springfox")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
                 .version("0.1")

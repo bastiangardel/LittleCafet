@@ -12,13 +12,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.TestRestTemplate.HttpClientOption;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -31,15 +34,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.AssertJUnit.assertEquals;
 
-@SpringApplicationConfiguration(classes
-        = {Application.class, ShiroConfiguration.class})
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes
+        = {Application.class, ShiroConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners(inheritListeners = false, listeners
         = {DependencyInjectionTestExecutionListener.class})
 public class UserControllerTest extends AbstractTestNGSpringContextTests {
 
-    private final String BASE_URL = "https://localhost:9000";
+    private final String BASE_URL = "https://localhost:";
     private final String USER_NAME = "Paulo Pires";
     private final String USER_EMAIL = "test@test.com";
     private final String USER_PWD = "test";
@@ -51,6 +53,9 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
     private RoleRepository roleRepo;
     @Autowired
     private PermissionRepository permissionRepo;
+
+    @LocalServerPort
+    private int port;
 
     @BeforeClass
     public void setUp() {
@@ -93,7 +98,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
                 new UsernamePasswordToken(USER_EMAIL, USER_PWD));
         System.out.println(json);
         final ResponseEntity<String> response = new TestRestTemplate(
-                HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat("/users/auth"),
+                TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/users/auth"),
                 HttpMethod.POST, new HttpEntity<>(json, headers), String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
@@ -110,7 +115,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
                 new UsernamePasswordToken(USER_EMAIL, "wrong password"));
         System.out.println(json);
         final ResponseEntity<String> response = new TestRestTemplate(
-                HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat("/users/auth"),
+                TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/users/auth"),
                 HttpMethod.POST, new HttpEntity<>(json, headers), String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
     }
