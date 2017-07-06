@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<products>
+    <product>
+        <id>1</id>
+        <name>Café</name>
+        <description>Café Nespresso</description>
+        <image>cafe.jpg</image>
+        <price>0.7</price>
+    </product>
+    <product>
+        <id>2</id>
+        <name>Boisson PET</name>
+        <description></description>
+        <image>PET.jpg</image>
+        <price>1.5</price>
+    </product>
+</products>

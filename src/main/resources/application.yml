@@ -40,3 +40,6 @@ security.headers.xss: false
 server.error.whitelabel.enabled: false
 
 
+products.path: products.xml
+
+

@@ -40,6 +40,9 @@ public class Application {
                     return false;
                 });
 
+
+
+
         new SpringApplicationBuilder()
                 .sources(Application.class,ShiroConfiguration.class)
                 .run(args);
