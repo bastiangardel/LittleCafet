@@ -1,12 +1,10 @@
-package ch.bastiangardel.LittleCafet.model;
+package ch.bastiangardel.LittleCafet.dto;
 
-import org.springframework.data.annotation.CreatedDate;
-
-import javax.persistence.*;
-import java.util.Date;
+import ch.bastiangardel.LittleCafet.model.Transaction;
+import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
- * Created by bastiangardel on 15.05.16.
+ * Created by bastiangardel on 17.05.16.
  *
  * Copyright (c) 2016 Bastian Gardel
  *
@@ -25,63 +23,33 @@ import java.util.Date;
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+public class PaymentDTO {
 
-@Entity
-@Table(name = "transaction")
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Version
-    private Long version;
-
-
-    @CreatedDate
-    private Date created;
-
-
-    private Double amount;
-
-
+    private String username;
+    private double amount;
     private String description;
 
+    public Transaction daoToModel()
+    {
+        Transaction tmp = new Transaction();
+        tmp.setAmount(amount);
+        tmp.setDescription(description);
+        return tmp;
+    }
 
-    public Double getAmount() {
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-
-    public Transaction(Double amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -91,15 +59,5 @@ public class Transaction {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Transaction() {
-    }
-
-
-
-    @PrePersist
-    protected void onCreate() {
-        created = new Date();
     }
 }

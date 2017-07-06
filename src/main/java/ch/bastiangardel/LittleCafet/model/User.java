@@ -1,7 +1,5 @@
 package ch.bastiangardel.LittleCafet.model;
 
-import ch.bastiangardel.LittleCafet.rest.View;
-import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -53,11 +51,8 @@ public class User {
     @ManyToMany
     private List<Role> roles;
 
-
-
     @OneToMany
     private List<Transaction> transactions;
-
 
     public Long getId() {
         return id;

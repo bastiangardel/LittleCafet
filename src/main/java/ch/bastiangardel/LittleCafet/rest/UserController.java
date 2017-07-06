@@ -1,11 +1,13 @@
 package ch.bastiangardel.LittleCafet.rest;
 
 import ch.bastiangardel.LittleCafet.dto.CredentialDTO;
+import ch.bastiangardel.LittleCafet.dto.PaymentDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
 import ch.bastiangardel.LittleCafet.exception.NotEnoughMoneyDebitException;
 import ch.bastiangardel.LittleCafet.exception.UserNotFoundException;
 import ch.bastiangardel.LittleCafet.model.Permission;
 import ch.bastiangardel.LittleCafet.model.Role;
+import ch.bastiangardel.LittleCafet.model.Transaction;
 import ch.bastiangardel.LittleCafet.model.User;
 import ch.bastiangardel.LittleCafet.repository.*;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -17,6 +19,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +68,9 @@ public class UserController {
     @Autowired
     private PermissionRepository permissionRepo;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
 
     @RequestMapping(value = "/auth", method = POST)
     public void authenticate(@RequestBody final CredentialDTO credentials) {
@@ -89,23 +95,30 @@ public class UserController {
         subject.logout();
     }
 
-    @RequestMapping(value = "/credit", method = POST)
+    @RequestMapping(value = "/payment", method = POST)
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
-    public SuccessMessageDTO creditAccount(@RequestParam String username, @RequestParam Double credit){
-        log.info("credit: {}" , username);
+    @Transactional
+    public SuccessMessageDTO payment(@RequestBody final PaymentDTO paymentDTO){
+        log.info("payment: {}" , paymentDTO.getUsername());
 
-        User user = userRepo.findByEmail(username);
+        User user = userRepo.findByEmail(paymentDTO.getUsername());
 
         if (user == null)
-            throw new UserNotFoundException("Not found User with Username : " + username);
+            throw new UserNotFoundException("Not found User with Username : " + paymentDTO.getUsername());
 
-        Double amount = user.getSolde();
-        user.setSolde(amount + credit);
+
+        Transaction transaction = transactionRepository.save(paymentDTO.daoToModel());
+
+
+        user.setSolde(user.getSolde() - paymentDTO.getAmount());
+        List<Transaction>list = user.getTransactions();
+        list.add(transaction);
+        user.setTransactions(list);
 
         userRepo.save(user);
 
-        return new SuccessMessageDTO("Credit with Success");
+        return new SuccessMessageDTO("Payment save with success");
     }
 
     @RequestMapping(value = "/debit", method = POST)
@@ -128,7 +141,6 @@ public class UserController {
         return new SuccessMessageDTO("Debit with Success");
     }
 
-    @JsonView(View.Summary.class)
     @RequestMapping(method = GET)
     @RequiresAuthentication
     @RequiresRoles("ADMIN" )
