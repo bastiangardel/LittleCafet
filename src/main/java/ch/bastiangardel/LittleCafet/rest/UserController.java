@@ -121,25 +121,6 @@ public class UserController {
         return new SuccessMessageDTO("Payment save with success");
     }
 
-    @RequestMapping(value = "/debit", method = POST)
-    @RequiresAuthentication
-    @RequiresRoles("ADMIN")
-    public SuccessMessageDTO debitAccount(@RequestParam String username, @RequestParam Double debit){
-        log.info("debit: {}" , username);
-
-        User user = userRepo.findByEmail(username);
-
-        if (user == null)
-            throw new UserNotFoundException("Not found User with Username : " + username);
-
-        if (debit > user.getSolde())
-            throw new NotEnoughMoneyDebitException("There is not enough money in this account!!");
-
-        Double amount = user.getSolde();
-        user.setSolde(amount - debit);
-
-        return new SuccessMessageDTO("Debit with Success");
-    }
 
     @RequestMapping(method = GET)
     @RequiresAuthentication

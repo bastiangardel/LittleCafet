@@ -3,59 +3,20 @@ package ch.bastiangardel.LittleCafet.tool;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.jdom2.input.*;
-
-/**
- * Created by bastiangardel on 06.07.17.
- */
-
-
-class Product {
-    int id;
-    String name;
-    double price;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-}
 
 
 public class ProductList {
 
-    List<Product> list;
+    private List<Product> list;
 
-    static String path = "products.xml";
+    private static String path = "products.xml";
 
     public ProductList() throws JDOMException, IOException {
         this.list = new ArrayList<>();
@@ -94,5 +55,9 @@ public class ProductList {
 
     public List<Product> getList() {
         return list;
+    }
+
+    public Product getProduct(int id){
+        return list.get(id);
     }
 }

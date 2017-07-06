@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 
+
 @EnableAutoConfiguration
 @EnableSwagger2
 @ComponentScan
