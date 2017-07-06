@@ -4,7 +4,6 @@ import ch.bastiangardel.LittleCafet.dto.CredentialDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
 import ch.bastiangardel.LittleCafet.exception.NotEnoughMoneyDebitException;
 import ch.bastiangardel.LittleCafet.exception.UserNotFoundException;
-import ch.bastiangardel.LittleCafet.model.CheckOut;
 import ch.bastiangardel.LittleCafet.model.Permission;
 import ch.bastiangardel.LittleCafet.model.Role;
 import ch.bastiangardel.LittleCafet.model.User;
@@ -66,11 +65,6 @@ public class UserController {
     @Autowired
     private PermissionRepository permissionRepo;
 
-    @Autowired
-    private CheckOutRepository checkOutRepo;
-
-    @Autowired
-    private ReceiptRepository receiptRepo;
 
     @RequestMapping(value = "/auth", method = POST)
     public void authenticate(@RequestBody final CredentialDTO credentials) {
@@ -150,8 +144,6 @@ public class UserController {
         userRepo.deleteAll();
         roleRepo.deleteAll();
         permissionRepo.deleteAll();
-        checkOutRepo.deleteAll();
-        receiptRepo.deleteAll();
         // define permissions
         Permission p1 = new Permission();
         p1.setName("VIEW_ALL_USERS");
@@ -177,7 +169,6 @@ public class UserController {
         Role roleClient = new Role();
         roleClient.setName("Client");
         roleClient.getPermissions().add(p4);
-        roleClient = roleRepo.save(roleClient);
         // define user
         final User user = new User();
         user.setActive(true);
@@ -198,7 +189,6 @@ public class UserController {
         user2.getRoles().add(roleSeller);
         user2.setSolde(100.0);
 
-        User usercheckout = userRepo.save(user2);
 
         final User user3 = new User();
         user3.setActive(true);
@@ -209,20 +199,6 @@ public class UserController {
         user3.getRoles().add(roleSeller);
         user3.setSolde(100.0);
         userRepo.save(user3);
-
-        CheckOut checkOut = new CheckOut();
-
-        checkOut.setName("c1");
-        checkOut.setOwner(usercheckout);
-        checkOut.setUuid("C696E65A-CF37-659A-6D45-7DF4E396DA53");
-
-        checkOut = checkOutRepo.save(checkOut);
-
-        List<CheckOut> list = usercheckout.getCheckoutInPossesion();
-
-        list.add(checkOut);
-
-        userRepo.save(usercheckout);
 
 
         log.info("Scenario initiated.");

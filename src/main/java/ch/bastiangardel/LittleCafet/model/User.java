@@ -44,27 +44,19 @@ public class User {
     private Long created;
 
 
-    @JsonView(View.Summary.class)
     private String email;
-    @JsonView(View.Summary.class)
     private String name;
     private Boolean active;
     private String password;
-    @JsonView(View.Summary.class)
     private Double solde;
 
-    @JsonView(View.Summary.class)
     @ManyToMany
     private List<Role> roles;
 
 
-    @OneToMany
-    private List<Receipt> receiptHistory;
-
 
     @OneToMany
-    private List<CheckOut> checkoutInPossesion;
-
+    private List<Transaction> transactions;
 
 
     public Long getId() {
@@ -142,36 +134,23 @@ public class User {
         this.solde = solde;
     }
 
-    public List<Receipt> getReceiptHistory() {
-        if (receiptHistory == null) {
-            this.receiptHistory = new ArrayList<>();
+    public List<Transaction> getTransactions() {
+        if (transactions == null) {
+            this.transactions = new ArrayList<>();
         }
-        return receiptHistory;
+        return transactions;
     }
 
-    public void setReceiptHistory(List<Receipt> receiptHistory) {
-        this.receiptHistory = receiptHistory;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
-    public List<CheckOut> getCheckoutInPossesion() {
-        if (checkoutInPossesion == null) {
-            this.checkoutInPossesion = new ArrayList<>();
-        }
-        return checkoutInPossesion;
-    }
-
-    public void setCheckoutInPossesion(List<CheckOut> checkoutInPossesion) {
-        this.checkoutInPossesion = checkoutInPossesion;
-    }
-
-    public User(Boolean active, Double solde, List<CheckOut> checkoutInPossesion, String email, String name, String password, List<Receipt> receiptHistory, List<Role> roles) {
+    public User(Boolean active, Double solde, String email, String name, String password, List<Role> roles) {
         this.active = active;
         this.solde = solde;
-        this.checkoutInPossesion = checkoutInPossesion;
         this.email = email;
         this.name = name;
         this.password = password;
-        this.receiptHistory = receiptHistory;
         this.roles = roles;
     }
 

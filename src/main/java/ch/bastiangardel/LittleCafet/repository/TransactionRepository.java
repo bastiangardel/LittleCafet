@@ -1,6 +1,5 @@
 package ch.bastiangardel.LittleCafet.repository;
 
-import ch.bastiangardel.LittleCafet.model.Receipt;
 import ch.bastiangardel.LittleCafet.model.Transaction;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 /**
- * DAO for {@link Receipt}.
+ * DAO for {@link Transaction}.
  */
 @Transactional
 public interface TransactionRepository extends CrudRepository<Transaction,Long> {

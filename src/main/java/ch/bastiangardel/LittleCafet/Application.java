@@ -46,9 +46,9 @@ public class Application {
     }
 
     @Bean
-    public Docket EasyPayApi() {
+    public Docket LittleCafetApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("EasyPay")
+                .groupName("LittleCafet")
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -65,7 +65,7 @@ public class Application {
                                 typeResolver.resolve(WildcardType.class)))
                 .useDefaultResponseMessages(false)
                 .enableUrlTemplating(false)
-                .tags(new Tag("EasyPay Service", "All apis relating to EasyPay"));
+                .tags(new Tag("LittleCafet Service", "All apis relating to LittleCafet"));
 
     }
 
@@ -76,11 +76,11 @@ public class Application {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("EasyPay API")
-                .description("Système de paiement mobile")
+                .title("LittleCafet")
+                .description("Gestion of a little Cafeteria")
                 .termsOfServiceUrl("http://springfox.io")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
+                .license("The MIT License")
+                .licenseUrl("https://opensource.org/licenses/MIT")
                 .version("0.1")
                 .build();
     }
