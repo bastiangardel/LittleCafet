@@ -37,11 +37,9 @@ public class ProductList {
             Element courant = (Element)i.next();
             Product p = new Product();
 
-            p.setId(Integer.parseInt(courant.getChild("id").getText()));
             p.setName(courant.getChild("name").getText());
             p.setPrice(Double.parseDouble(courant.getChild("price").getText()));
 
-            System.out.println(p.getId());
             System.out.println(p.getName());
             System.out.println(p.getPrice());
 

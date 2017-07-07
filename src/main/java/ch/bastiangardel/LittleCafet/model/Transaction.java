@@ -1,5 +1,6 @@
 package ch.bastiangardel.LittleCafet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -40,11 +41,13 @@ public class Transaction {
     @CreatedDate
     private Date created;
 
-
     private Double amount;
 
-
     private String description;
+
+    @JsonIgnore
+    @OneToOne
+    private User user;
 
 
     public Double getAmount() {
@@ -71,18 +74,12 @@ public class Transaction {
         this.id = id;
     }
 
-
     public Long getVersion() {
         return version;
     }
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-
-    public Transaction(Double amount) {
-        this.amount = amount;
     }
 
     public String getDescription() {
@@ -96,7 +93,13 @@ public class Transaction {
     public Transaction() {
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @PrePersist
     protected void onCreate() {

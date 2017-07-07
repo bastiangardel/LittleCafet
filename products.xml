@@ -2,17 +2,29 @@
 
 <products>
     <product>
-        <id>1</id>
-        <name>Café</name>
-        <description>Café Nespresso</description>
+        <name>Coffee</name>
         <image>cafe.jpg</image>
         <price>0.7</price>
     </product>
     <product>
-        <id>2</id>
-        <name>Boisson PET</name>
-        <description></description>
+        <name>PET Bottle</name>
         <image>PET.jpg</image>
         <price>1.5</price>
+    </product>
+    <product>
+        <name>Ice Tea Carton</name>
+        <description>Carton</description>
+        <image>Carton.jpg</image>
+        <price>1</price>
+    </product>
+    <product>
+        <name>Big Chocolate</name>
+        <image>BChocolate.jpg</image>
+        <price>1.5</price>
+    </product>
+    <product>
+        <name>little Chocolate</name>
+        <image>LChocolate.jpg</image>
+        <price>0.75</price>
     </product>
 </products>

@@ -1,6 +1,10 @@
 package ch.bastiangardel.LittleCafet.repository;
 
+import ch.bastiangardel.LittleCafet.model.Transaction;
 import ch.bastiangardel.LittleCafet.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 

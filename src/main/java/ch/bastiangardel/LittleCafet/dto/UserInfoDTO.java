@@ -1,14 +1,10 @@
-package ch.bastiangardel.LittleCafet.repository;
+package ch.bastiangardel.LittleCafet.dto;
 
-import ch.bastiangardel.LittleCafet.model.Transaction;
 import ch.bastiangardel.LittleCafet.model.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
- * Created by bastiangardel on 16.05.16.
+ * Created by bastiangardel on 17.05.16.
  *
  * Copyright (c) 2016 Bastian Gardel
  *
@@ -27,12 +23,39 @@ import org.springframework.transaction.annotation.Transactional;
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+public class UserInfoDTO {
+    private String username;
+    private String name;
+    private double solde;
 
-/**
- * DAO for {@link Transaction}.
- */
-@Transactional
-public interface TransactionRepository extends CrudRepository<Transaction,Long> {
+    public UserInfoDTO modelToDTO(User user){
+        username = user.getEmail();
+        name = user.getName();
+        solde = user.getSolde();
+        return this;
+    }
 
-    Page<Transaction> findAllByUser(User user, Pageable pageable);
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public double getSolde() {
+        return solde;
+    }
+
+    public void setSolde(double solde) {
+        this.solde = solde;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

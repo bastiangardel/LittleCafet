@@ -18,7 +18,7 @@ public class ProductListTest {
 
         ProductList productList = new ProductList();
 
-        assertEquals(productList.getList().size(),2);
+        assertEquals(productList.getList().size(),5);
     }
 
 

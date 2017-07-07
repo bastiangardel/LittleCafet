@@ -25,6 +25,10 @@ import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,19 +94,18 @@ public class TransactionController {
     @Transactional
     public SuccessMessageDTO buy(@RequestParam final int idProduct){
 
-
         final Subject subject = SecurityUtils.getSubject();
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
 
-        log.info("Buy: {}" , user.getEmail());
+        Product p = productList.getProduct(idProduct);
+
+        log.info("Buy: {} - {}" , user.getEmail(), p.getName());
 
         Transaction tmp = new Transaction();
-
-        Product p = productList.getProduct(idProduct);
+        tmp.setUser(user);
         tmp.setAmount(p.getPrice());
         tmp.setDescription(p.getName());
-
         Transaction transaction = transactionRepository.save(tmp);
 
 
@@ -110,11 +113,23 @@ public class TransactionController {
         List<Transaction>list = user.getTransactions();
         list.add(transaction);
         user.setTransactions(list);
-
         userRepo.save(user);
 
 
         return new SuccessMessageDTO("Purchase with success");
+    }
+
+    @RequestMapping(value = "/list", method = GET)
+    @RequiresAuthentication
+    public List<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                 @RequestParam(value = "count", defaultValue = "10", required = false) int size,
+                                                 @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction){
+
+        final Subject subject = SecurityUtils.getSubject();
+
+        User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
+
+        return transactionRepository.findAllByUser(user,new PageRequest(page, size, new Sort(direction, "created"))).getContent();
     }
 
 }
