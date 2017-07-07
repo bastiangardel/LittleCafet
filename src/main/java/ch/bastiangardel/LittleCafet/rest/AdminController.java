@@ -13,6 +13,9 @@ import ch.bastiangardel.LittleCafet.repository.TransactionRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
 import ch.bastiangardel.LittleCafet.tool.Product;
 import ch.bastiangardel.LittleCafet.tool.ProductList;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -81,12 +84,15 @@ public class AdminController {
 
 
     @RequestMapping(value = "/transaction", method = GET)
+    @ApiOperation(value = "Get a user's transactions list", notes = "The username is required")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+                            @ApiResponse(code = 404, message = "User not found")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
     public List<Transaction> getUserTransactionsList(@RequestParam String username,
                                                      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                      @RequestParam(value = "count", defaultValue = "10", required = false) int size,
-                                                     @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction){
+                                                     @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction) {
 
         User user = userRepo.findByEmail(username);
 
@@ -97,10 +103,11 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/payment", method = POST)
+    @ApiOperation(value = "Save a user's payment")
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
     @Transactional
-    public SuccessMessageDTO payment(@RequestBody final PaymentDTO paymentDTO){
+    public SuccessMessageDTO payment(@RequestBody final PaymentDTO paymentDTO) {
         log.info("payment: {}" , paymentDTO.getUsername());
 
         User user = userRepo.findByEmail(paymentDTO.getUsername());
@@ -125,6 +132,7 @@ public class AdminController {
 
 
     @RequestMapping(value = "/userslist", method = GET)
+    @ApiOperation(value = "Get the list of all users")
     @RequiresAuthentication
     @RequiresRoles("ADMIN" )
     public List<User> getAll() {
@@ -133,6 +141,7 @@ public class AdminController {
     }
 
     @RequestMapping(method = PUT)
+    @ApiOperation(value = "Load some elements in database for test purpose ", notes = "The username is required")
     public void initScenario() {
         log.info("Initializing scenario..");
         // clean-up users, roles and permissions
