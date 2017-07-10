@@ -8,9 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by bastiangardel on 16.05.16.
+ * Created by bastiangardel on 01.07.17.
  *
- * Copyright (c) 2016 Bastian Gardel
+ * Copyright (c) 2017 Bastian Gardel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
