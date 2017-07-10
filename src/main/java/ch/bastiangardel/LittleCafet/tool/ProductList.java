@@ -77,4 +77,9 @@ public class ProductList {
     public Product getProduct(int id){
         return list.get(id);
     }
+
+    public int getNumberOfProduct()
+    {
+        return list.size();
+    }
 }

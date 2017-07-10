@@ -42,6 +42,12 @@ public class ApplicationExceptionHandler {
     public void userNotFound() {
     }
 
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "This product doesn't exist in the system!")
+    @ExceptionHandler(
+            {ProductDoestExist.class})
+    public void productDoesntExist() {
+    }
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No receipt to pay in this checkout!")
     @ExceptionHandler(
             {NoReceiptToPayExeption.class})

@@ -12,6 +12,9 @@ import ch.bastiangardel.LittleCafet.model.Transaction;
 import ch.bastiangardel.LittleCafet.model.User;
 import ch.bastiangardel.LittleCafet.repository.*;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -57,23 +60,15 @@ public class UserController {
     private static final Logger log = LoggerFactory.
             getLogger(UserController.class);
 
-    @Autowired
-    private DefaultPasswordService passwordService;
 
     @Autowired
     private UserRepository userRepo;
 
-    @Autowired
-    private RoleRepository roleRepo;
-
-    @Autowired
-    private PermissionRepository permissionRepo;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
 
 
     @RequestMapping(value = "/auth", method = POST)
+    @ApiOperation(value = "Try to logged in")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     public void authenticate(@RequestBody final CredentialDTO credentials) {
 
         final Subject subject = SecurityUtils.getSubject();
@@ -88,6 +83,8 @@ public class UserController {
 
 
     @RequestMapping(value = "/logout", method = POST)
+    @ApiOperation(value = "Try to logged out")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
     public void logout() {
 
@@ -99,8 +96,9 @@ public class UserController {
 
 
     @RequestMapping(value = "/info", method = GET)
+    @ApiOperation(value = "Get the logged in user's info")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
-    @Transactional
     public UserInfoDTO info(){
 
         final Subject subject = SecurityUtils.getSubject();

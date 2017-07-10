@@ -5,6 +5,7 @@ import ch.bastiangardel.LittleCafet.dto.CredentialDTO;
 import ch.bastiangardel.LittleCafet.dto.PaymentDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
 import ch.bastiangardel.LittleCafet.exception.NotEnoughMoneyDebitException;
+import ch.bastiangardel.LittleCafet.exception.ProductDoestExist;
 import ch.bastiangardel.LittleCafet.exception.UserNotFoundException;
 import ch.bastiangardel.LittleCafet.model.Permission;
 import ch.bastiangardel.LittleCafet.model.Role;
@@ -16,6 +17,9 @@ import ch.bastiangardel.LittleCafet.repository.TransactionRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
 import ch.bastiangardel.LittleCafet.tool.Product;
 import ch.bastiangardel.LittleCafet.tool.ProductList;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -67,17 +71,9 @@ public class TransactionController {
     private static final Logger log = LoggerFactory.
             getLogger(TransactionController.class);
 
-    @Autowired
-    private DefaultPasswordService passwordService;
 
     @Autowired
     private UserRepository userRepo;
-
-    @Autowired
-    private RoleRepository roleRepo;
-
-    @Autowired
-    private PermissionRepository permissionRepo;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -90,6 +86,9 @@ public class TransactionController {
 
 
     @RequestMapping(value = "/buy", method = POST)
+    @ApiOperation(value = "Buy a product")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+                            @ApiResponse(code = 404, message = "Product not found")})
     @RequiresAuthentication
     @Transactional
     public SuccessMessageDTO buy(@RequestParam final int idProduct){
@@ -97,6 +96,9 @@ public class TransactionController {
         final Subject subject = SecurityUtils.getSubject();
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
+
+        if (idProduct > productList.getNumberOfProduct()-1)
+            throw new ProductDoestExist("Product doesn't exist !!");
 
         Product p = productList.getProduct(idProduct);
 
@@ -120,6 +122,8 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/list", method = GET)
+    @ApiOperation(value = "Get the logged in user's transactions list")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
     public List<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                  @RequestParam(value = "count", defaultValue = "10", required = false) int size,

@@ -104,6 +104,8 @@ public class AdminController {
 
     @RequestMapping(value = "/payment", method = POST)
     @ApiOperation(value = "Save a user's payment")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+                            @ApiResponse(code = 404, message = "User not found")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
     @Transactional
@@ -133,6 +135,7 @@ public class AdminController {
 
     @RequestMapping(value = "/userslist", method = GET)
     @ApiOperation(value = "Get the list of all users")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN" )
     public List<User> getAll() {
