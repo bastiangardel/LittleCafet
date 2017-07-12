@@ -2,7 +2,7 @@ This project is comprehended by the following:
 * Spring Boot (1.5.4)
 * Apache Shiro (1.4.0) session-management with MySQL-based authorizing realm
 * Hazelcast (3.8.3) powered session distributed persistence
-* MySQL Database with JPA and Hibernate
+* MariaDB Database with JPA and Hibernate
 * Swagger Rest API Doc with Spring Fox plugin
 
 
@@ -14,7 +14,7 @@ This project is comprehended by the following:
 
 * JDK 8
 * Maven 3.2.3 or newer
-* MySQL 
+* MariaDB 
 
 # Run
 
