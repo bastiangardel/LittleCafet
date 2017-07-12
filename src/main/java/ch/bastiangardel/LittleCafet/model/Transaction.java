@@ -56,7 +56,7 @@ public class Transaction {
 
     @CreatedDate
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
-    @Columns(columns={@Column(name="createdDate", columnDefinition="DATETIME(6)"),@Column(name="createdDateTZ")})
+    @Columns(columns={@Column(name="createdDate", columnDefinition="DATETIME(3)"),@Column(name="createdDateTZ")})
     private DateTime created;
 
     private Double amount;
