@@ -1,38 +1,25 @@
 package ch.bastiangardel.LittleCafet.rest;
 
-import ch.bastiangardel.LittleCafet.dto.BuyDTO;
-import ch.bastiangardel.LittleCafet.dto.CredentialDTO;
-import ch.bastiangardel.LittleCafet.dto.PaymentDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
-import ch.bastiangardel.LittleCafet.exception.NotEnoughMoneyDebitException;
 import ch.bastiangardel.LittleCafet.exception.ProductDoestExist;
-import ch.bastiangardel.LittleCafet.exception.UserNotFoundException;
-import ch.bastiangardel.LittleCafet.model.Permission;
-import ch.bastiangardel.LittleCafet.model.Role;
 import ch.bastiangardel.LittleCafet.model.Transaction;
 import ch.bastiangardel.LittleCafet.model.User;
-import ch.bastiangardel.LittleCafet.repository.PermissionRepository;
-import ch.bastiangardel.LittleCafet.repository.RoleRepository;
 import ch.bastiangardel.LittleCafet.repository.TransactionRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
 import ch.bastiangardel.LittleCafet.tool.Product;
 import ch.bastiangardel.LittleCafet.tool.ProductList;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +29,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-import static sun.misc.Version.println;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Created by bastiangardel on 01.07.17.

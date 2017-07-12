@@ -1,7 +1,6 @@
 package ch.bastiangardel.LittleCafet.dto;
 
 import ch.bastiangardel.LittleCafet.model.User;
-import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
  * Created by bastiangardel on 01.07.17.
