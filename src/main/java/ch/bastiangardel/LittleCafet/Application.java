@@ -36,7 +36,6 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 public class Application {
 
     public static void main(String... args) {
-
         javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
                 (hostname, sslSession) -> {
                     if (hostname.equals("localhost")) {

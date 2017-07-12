@@ -11,27 +11,32 @@ import ch.bastiangardel.LittleCafet.repository.RoleRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.springframework.http.HttpMethod.*;
 import static org.testng.AssertJUnit.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -80,6 +85,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
         user.setName(USER_NAME);
         user.setPassword(passwordService.encryptPassword(USER_PWD));
         user.getRoles().add(roleAdmin);
+        user.setSolde(100.0);
         userRepo.save(user);
 
     }
@@ -100,7 +106,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
         System.out.println(json);
         final ResponseEntity<String> response = new TestRestTemplate(
                 TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/users/auth"),
-                HttpMethod.POST, new HttpEntity<>(json, headers), String.class);
+                POST, new HttpEntity<>(json, headers), String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
 
@@ -117,7 +123,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
         System.out.println(json);
         final ResponseEntity<String> response = new TestRestTemplate(
                 TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/users/auth"),
-                HttpMethod.POST, new HttpEntity<>(json, headers), String.class);
+                POST, new HttpEntity<>(json, headers), String.class);
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
     }
 
@@ -133,40 +139,38 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
         System.out.println(json);
         final ResponseEntity<String> response = new TestRestTemplate(
                 TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/users/auth"),
-                HttpMethod.POST, new HttpEntity<>(json, headers), String.class);
+                POST, new HttpEntity<>(json, headers), String.class);
 
         HttpHeaders respheaders = response.getHeaders();
         String set_cookie = respheaders.getFirst(respheaders.SET_COOKIE);
+        String set_cookie2 = respheaders.getFirst(respheaders.SET_COOKIE2);
 
         System.out.println(set_cookie);
+        System.out.println(set_cookie2);
 
 
-        HttpHeaders headerstrans = new HttpHeaders();
-       headerstrans.set(respheaders.SET_COOKIE,set_cookie);
-        final ResponseEntity<String> responsetrans = new TestRestTemplate().exchange(BASE_URL.concat(String.valueOf(port)).concat("/admin/manuallyCheck?username=test%40test.com&idProduct=0&number=20"),
-                HttpMethod.POST, new HttpEntity<>(headerstrans), String.class);
+        HttpHeaders headers2 = new HttpHeaders();
+
+        headers2.set(HttpHeaders.COOKIE,set_cookie);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL.concat(String.valueOf(port)).concat("/admin/manuallyCheck"))
+                .queryParam("username", "test@test.com")
+                .queryParam("idProduct", 0)
+                .queryParam("number", 20);
+
+        ResponseEntity<String> rateResponse =
+                new TestRestTemplate().exchange(builder.build().encode().toUri().toString(),
+                        POST, new HttpEntity<>(headers2), String.class);
 
 
-        HttpHeaders getheaders = new HttpHeaders();
-        getheaders.set(respheaders.SET_COOKIE,set_cookie);
-        getheaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-        final ResponseEntity<String> response2 = new TestRestTemplate(
-                TestRestTemplate.HttpClientOption.ENABLE_COOKIES).exchange(BASE_URL.concat(String.valueOf(port)).concat("/transaction/list?page=0&count=20"),
-                HttpMethod.GET, new HttpEntity<>(getheaders), String.class);
+        ResponseEntity<List<Transaction>> rateResponse2 =
+                new TestRestTemplate().exchange(BASE_URL.concat(String.valueOf(port)).concat("/transaction/list"),
+                        GET, new HttpEntity<>(headers2), new ParameterizedTypeReference<List<Transaction>>() {
+                        });
+        List<Transaction> transactionList = rateResponse2.getBody();
 
 
-       // List<Transaction> t = new ObjectMapper().readValue(response2.getBody(), List<Transaction>.class);
-
-        //System.out.println(t);
-
-
-
-
-
-
-
-
+        System.out.println(transactionList.get(0).getCreated());
     }
 
 }

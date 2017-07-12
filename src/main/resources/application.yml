@@ -4,7 +4,12 @@ spring.datasource.username: littlecafet
 spring.datasource.password: hHujsGaBwsm72GT4
 
 
+spring.jpa.properties.jadira.usertype.databaseZones: jvm
+spring.jpa.properties.jadira.usertype.javaZone: jvm
+
 spring.jackson.serialization.write_dates_as_timestamps: false
+
+spring.jackson.serialization.write_dates_with_zone_id: true
 
 # Keep the connection alive if idle for a long time (needed in production)
 spring.datasource.tomcat.test-while-idle: true
@@ -19,11 +24,10 @@ spring.jpa.hibernate.ddl-auto: create-drop
 # The SQL dialect makes Hibernate generate better SQL for the chosen database
 spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
 
-#spring.jpa.hibernate.naming.strategy: org.hibernate.cfg.ImprovedNamingStrategy
-
 
 logging.level.org.hibernate.SQL: DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 
 
 logging.level.org.springframework.web: INFO
@@ -44,6 +48,7 @@ server.error.whitelabel.enabled: false
 
 
 products.path: products.xml
+
 
 
 

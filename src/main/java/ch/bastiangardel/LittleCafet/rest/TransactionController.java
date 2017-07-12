@@ -43,6 +43,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static sun.misc.Version.println;
 
 /**
  * Created by bastiangardel on 01.07.17.
@@ -135,6 +136,11 @@ public class TransactionController {
         List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
 
         transactionList.sort(Comparator.comparing(Transaction::getCreated));
+
+        if (transactionList.size() != 0)
+        {
+            log.info("Read Transaction: {}" , transactionList.get(0).getCreated());
+        }
 
         return transactionList;
     }
