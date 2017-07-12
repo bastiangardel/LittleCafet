@@ -2,6 +2,7 @@ package ch.bastiangardel.LittleCafet.rest;
 
 import ch.bastiangardel.LittleCafet.dto.PaymentDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
+import ch.bastiangardel.LittleCafet.exception.ProductDoestExist;
 import ch.bastiangardel.LittleCafet.exception.UserNotFoundException;
 import ch.bastiangardel.LittleCafet.model.Permission;
 import ch.bastiangardel.LittleCafet.model.Role;
@@ -34,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -82,6 +85,11 @@ public class AdminController {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    private ProductList productList = new ProductList();
+
+    public AdminController() throws JDOMException, IOException {
+    }
+
 
     @RequestMapping(value = "/transaction", method = GET)
     @ApiOperation(value = "Get a user's transactions list", notes = "The username is required")
@@ -91,15 +99,21 @@ public class AdminController {
     @RequiresRoles("ADMIN")
     public List<Transaction> getUserTransactionsList(@RequestParam String username,
                                                      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                     @RequestParam(value = "count", defaultValue = "10", required = false) int size,
-                                                     @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction) {
+                                                     @RequestParam(value = "count", defaultValue = "10", required = false) int size) {
 
         User user = userRepo.findByEmail(username);
 
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + username);
 
-        return transactionRepository.findAllByUser(user,new PageRequest(page, size, new Sort(direction, "created"))).getContent();
+        List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
+
+        transactionList.sort(Comparator.comparing(Transaction::getCreated));
+
+        for(Transaction ignored :transactionList)
+            log.info("Read Transaction: {}", transactionList.get(0).getCreated());
+
+        return transactionList;
     }
 
     @RequestMapping(value = "/payment", method = POST)
@@ -117,7 +131,6 @@ public class AdminController {
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + paymentDTO.getUsername());
 
-
         Transaction tmp = paymentDTO.daoToModel();
         tmp.setUser(user);
         Transaction transaction = transactionRepository.save(tmp);
@@ -132,6 +145,49 @@ public class AdminController {
         return new SuccessMessageDTO("Payment save with success");
     }
 
+    @RequestMapping(value = "/manuallyCheck", method = POST)
+    @ApiOperation(value = "Manually check a number of one product")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+                            @ApiResponse(code = 404, message = "Product not found"),
+                            @ApiResponse(code = 404, message = "User not found")})
+    @RequiresAuthentication
+    @RequiresRoles("ADMIN" )
+    @Transactional
+    public SuccessMessageDTO manuallyCheck(@RequestParam String username, @RequestParam final int idProduct,  @RequestParam final int number){
+
+        User user = userRepo.findByEmail(username);
+
+        if (user == null)
+            throw new UserNotFoundException("Not found User with Username : " + username);
+
+        if (idProduct > productList.getNumberOfProduct()-1)
+            throw new ProductDoestExist("Product doesn't exist !!");
+
+        Product p = productList.getProduct(idProduct);
+
+        log.info("Check: {} - {} * {}", username, number, p.getName());
+
+        for (int i = 1; i <= number; i++)
+        {
+            Transaction tmp = new Transaction();
+            tmp.setUser(user);
+            tmp.setAmount(p.getPrice());
+            tmp.setDescription(p.getName());
+            Transaction transaction = transactionRepository.save(tmp);
+
+            log.info("Create Transaction: {}" , transaction.getCreated());
+
+            user = userRepo.findByEmail(username);
+
+            user.setSolde(user.getSolde() + transaction.getAmount());
+            List<Transaction>list = user.getTransactions();
+            list.add(transaction);
+            user.setTransactions(list);
+            userRepo.save(user);
+        }
+
+        return new SuccessMessageDTO("Check with success");
+    }
 
     @RequestMapping(value = "/userslist", method = GET)
     @ApiOperation(value = "Get the list of all users")
@@ -144,13 +200,15 @@ public class AdminController {
     }
 
     @RequestMapping(method = PUT)
-    @ApiOperation(value = "Load some elements in database for test purpose ", notes = "The username is required")
+    @ApiOperation(value = "Load some elements in database for test purpose ")
     public void initScenario() {
         log.info("Initializing scenario..");
+
         // clean-up users, roles and permissions
         userRepo.deleteAll();
         roleRepo.deleteAll();
         permissionRepo.deleteAll();
+
         // define permissions
         Permission p1 = new Permission();
         p1.setName("VIEW_ALL_USERS");
@@ -164,6 +222,7 @@ public class AdminController {
         Permission p4 = new Permission();
         p4.setName("BUYING");
         p4 = permissionRepo.save(p4);
+
         // define roles
         Role roleAdmin = new Role();
         roleAdmin.setName("ADMIN");
@@ -176,6 +235,7 @@ public class AdminController {
         Role roleClient = new Role();
         roleClient.setName("Client");
         roleClient.getPermissions().add(p4);
+
         // define user
         final User user = new User();
         user.setActive(true);
@@ -195,7 +255,7 @@ public class AdminController {
         user2.setPassword(passwordService.encryptPassword("test"));
         user2.getRoles().add(roleSeller);
         user2.setSolde(100.0);
-
+        userRepo.save(user2);
 
         final User user3 = new User();
         user3.setActive(true);
@@ -206,7 +266,6 @@ public class AdminController {
         user3.getRoles().add(roleSeller);
         user3.setSolde(100.0);
         userRepo.save(user3);
-
 
         log.info("Scenario initiated.");
     }

@@ -5,6 +5,7 @@ import ch.bastiangardel.LittleCafet.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -32,7 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
  * DAO for {@link Transaction}.
  */
 @Transactional
-public interface TransactionRepository extends CrudRepository<Transaction,Long> {
+public interface TransactionRepository extends PagingAndSortingRepository<Transaction,Long> {
 
     Page<Transaction> findAllByUser(User user, Pageable pageable);
+
 }

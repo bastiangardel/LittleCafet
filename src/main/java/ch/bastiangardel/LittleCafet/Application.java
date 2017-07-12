@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -21,6 +22,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
+import java.util.TimeZone;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
@@ -29,10 +31,12 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableAutoConfiguration
 @EnableSwagger2
 @ComponentScan
+@EnableJpaAuditing
 @Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
 public class Application {
 
     public static void main(String... args) {
+
         javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
                 (hostname, sslSession) -> {
                     if (hostname.equals("localhost")) {

@@ -1,9 +1,14 @@
 package ch.bastiangardel.LittleCafet.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.*;
 
 import javax.persistence.*;
+import javax.persistence.Temporal;
 import java.util.Date;
 
 /**
@@ -29,6 +34,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "transaction")
+@EntityListeners(AuditingEntityListener.class)
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,7 +45,8 @@ public class Transaction {
 
 
     @CreatedDate
-    private Date created;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime created;
 
     private Double amount;
 
@@ -58,11 +65,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Date getCreated() {
+    public DateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(DateTime created) {
         this.created = created;
     }
 
@@ -101,8 +108,8 @@ public class Transaction {
         this.user = user;
     }
 
-    @PrePersist
+   /* @PrePersist
     protected void onCreate() {
-        created = new Date();
-    }
+        created = new DateTime();
+    }*/
 }

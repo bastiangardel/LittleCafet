@@ -17,9 +17,7 @@ import ch.bastiangardel.LittleCafet.repository.TransactionRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
 import ch.bastiangardel.LittleCafet.tool.Product;
 import ch.bastiangardel.LittleCafet.tool.ProductList;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -40,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -126,14 +126,18 @@ public class TransactionController {
     @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
     public List<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                 @RequestParam(value = "count", defaultValue = "10", required = false) int size,
-                                                 @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction){
+                                                 @RequestParam(value = "count", defaultValue = "10", required = false) int size){
 
         final Subject subject = SecurityUtils.getSubject();
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
 
-        return transactionRepository.findAllByUser(user,new PageRequest(page, size, new Sort(direction, "created"))).getContent();
+        List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
+
+        transactionList.sort(Comparator.comparing(Transaction::getCreated));
+
+        return transactionList;
     }
+
 
 }
