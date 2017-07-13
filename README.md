@@ -7,14 +7,15 @@ This project is comprehended by the following:
 
 
 # Summary
-
+- TODO
 
 
 # Pre-requisites
 
 * JDK 8
 * Maven 3.2.3 or newer
-* MariaDB 
+* MariaDB (Creation of "littleCafet" database and modify the spring config)
+* The generation of "keystore.p12" SSL Certificate
 
 # Run
 
