@@ -1,18 +1,17 @@
 package ch.bastiangardel.LittleCafet.web;
 
-import io.swagger.annotations.BasicAuthDefinition;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by bastiangardel on 13.07.17.
  */
 @Controller
+@ApiIgnore
 public class WelcomeController {
 
     @RequestMapping("/")

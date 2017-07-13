@@ -1,6 +1,5 @@
 package ch.bastiangardel.LittleCafet;
 
-import ch.bastiangardel.LittleCafet.rest.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-import static java.awt.image.ImageObserver.ABORT;
-
 /**
  * Created by bastiangardel on 13.07.17.
  */
@@ -21,7 +18,7 @@ public class ApplicationStartup
         implements ApplicationListener<ApplicationReadyEvent> {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
     private static final Logger log = LoggerFactory.
             getLogger(ApplicationStartup.class);
@@ -62,7 +59,6 @@ public class ApplicationStartup
 
 
         log.info("----- Database connexion UP and Running------");
-        return;
     }
 
 }

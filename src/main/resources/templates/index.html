@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Helloworld</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> </meta>
-    <!-- Bootstrap -->
-    <link href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet" media="screen"> </link>
+    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    function pageRedirect() {
+        window.location.href = "swagger-ui.html#";
+    }
+</script>
 
-<div style="text-align: center;"><b><p th:text="'Welcome on the Little Cafet Rest API Server, ' + ${username} + ' !'" /></b></div>
+<div style="text-align: center; font-size: 60px; margin-top: 100px; color: orangered">
+    <p th:text="'Welcome on the Little Cafet Rest API Server, ' + ${username} + ' !'" ></p>
+</div>
+
+<div style="text-align: center; margin-top: 100px ">
+    <button type="button" class="btn btn-primary btn-lg" onclick="pageRedirect()" >!! Let's Started !!</button>
+</div>
 
 </body>
 </html>
