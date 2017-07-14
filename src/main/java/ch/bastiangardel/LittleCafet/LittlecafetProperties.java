@@ -13,11 +13,21 @@ public class LittlecafetProperties {
 
     private String  signature;
 
+    private String productspath;
+
     public String getSignature() {
         return signature;
     }
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getProductspath() {
+        return productspath;
+    }
+
+    public void setProductspath(String productspath) {
+        this.productspath = productspath;
     }
 }

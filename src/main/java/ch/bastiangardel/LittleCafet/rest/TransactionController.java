@@ -67,7 +67,10 @@ public class TransactionController {
     private TransactionRepository transactionRepository;
 
 
-    private ProductList productList = new ProductList();
+    //private ProductList productList = new ProductList();
+
+    @Autowired
+    private ProductList productList;
 
     public TransactionController() throws JDOMException, IOException {
     }

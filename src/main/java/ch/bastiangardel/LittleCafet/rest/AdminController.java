@@ -88,8 +88,10 @@ public class AdminController {
     private EmailService emailService;
 
 
-    private ProductList productList = new ProductList();
+    //private ProductList productList = new ProductList();
 
+    @Autowired
+    private ProductList productList;
 
     public AdminController() throws JDOMException, IOException {
     }

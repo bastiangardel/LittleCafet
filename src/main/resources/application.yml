@@ -71,7 +71,7 @@ spring.mail.properties.mail.smtp.auth: false
 ### Custom Properties ###
 
 littlecafet.signature: "Bastian et Raphael"
-
+littlecafet.productspath: "products.xml"
 
 
 

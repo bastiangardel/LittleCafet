@@ -4,6 +4,9 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,20 +34,22 @@ import java.util.List;
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+@Service
 public class ProductList {
 
     private List<Product> list;
 
 
-    String productsfilepath = "products.xml";
+    //String productsfilepath = "products.xml";
 
-    public ProductList() throws JDOMException, IOException {
+    @Autowired
+    public ProductList(ProductsFilePathLoader productsFilePathLoader) throws JDOMException, IOException {
         this.list = new ArrayList<>();
 
 
         SAXBuilder sxb = new SAXBuilder();
 
-        Document document = sxb.build(new File(productsfilepath));
+        Document document = sxb.build(new File(productsFilePathLoader.getProductspath()));
 
         Element racine = document.getRootElement();
 
