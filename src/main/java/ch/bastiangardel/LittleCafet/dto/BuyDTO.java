@@ -1,8 +1,8 @@
 package ch.bastiangardel.LittleCafet.dto;
 
 import ch.bastiangardel.LittleCafet.model.Transaction;
-import ch.bastiangardel.LittleCafet.tool.Product;
-import ch.bastiangardel.LittleCafet.tool.ProductList;
+import ch.bastiangardel.LittleCafet.tool.product.Product;
+import ch.bastiangardel.LittleCafet.tool.product.ProductList;
 
 /**
  * Created by bastiangardel on 01.07.17.

@@ -12,14 +12,17 @@ import ch.bastiangardel.LittleCafet.repository.PermissionRepository;
 import ch.bastiangardel.LittleCafet.repository.RoleRepository;
 import ch.bastiangardel.LittleCafet.repository.TransactionRepository;
 import ch.bastiangardel.LittleCafet.repository.UserRepository;
-import ch.bastiangardel.LittleCafet.tool.Product;
-import ch.bastiangardel.LittleCafet.tool.ProductList;
+import ch.bastiangardel.LittleCafet.tool.email.EmailService;
+import ch.bastiangardel.LittleCafet.tool.product.Product;
+import ch.bastiangardel.LittleCafet.tool.product.ProductList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +83,13 @@ public class AdminController {
     @Autowired
     private TransactionRepository transactionRepository;
 
+
+    @Autowired
+    private EmailService emailService;
+
+
     private ProductList productList = new ProductList();
+
 
     public AdminController() throws JDOMException, IOException {
     }
@@ -119,7 +128,7 @@ public class AdminController {
     @RequiresRoles("ADMIN")
     @Transactional
     public SuccessMessageDTO payment(@RequestBody final PaymentDTO paymentDTO) {
-        log.info("payment: {}" , paymentDTO.getUsername());
+        log.info("payment: {} " , paymentDTO.getUsername());
 
         User user = userRepo.findByEmail(paymentDTO.getUsername());
 
@@ -143,14 +152,15 @@ public class AdminController {
     @RequestMapping(value = "/manuallyCheck", method = POST)
     @ApiOperation(value = "Manually check a number of one product")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
-                            @ApiResponse(code = 404, message = "Product not found"),
-                            @ApiResponse(code = 404, message = "User not found")})
+            @ApiResponse(code = 404, message = "Product not found"),
+            @ApiResponse(code = 404, message = "User not found")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN" )
     @Transactional
     public SuccessMessageDTO manuallyCheck(@RequestParam String username, @RequestParam final int idProduct,  @RequestParam final int number){
 
         User user = userRepo.findByEmail(username);
+
 
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + username);
@@ -160,7 +170,7 @@ public class AdminController {
 
         Product p = productList.getProduct(idProduct);
 
-        log.info("Check: {} - {} * {}", username, number, p.getName());
+        log.info("Check: {} - {} * {}", new Object[]{username,number,p.getName()});
 
         for (int i = 1; i <= number; i++)
         {
@@ -180,6 +190,37 @@ public class AdminController {
             user.setTransactions(list);
             userRepo.save(user);
         }
+
+        return new SuccessMessageDTO("Check with success");
+    }
+
+    @RequestMapping(value = "/sendinvoice", method = POST)
+    @ApiOperation(value = "Envoie de factures")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+            @ApiResponse(code = 404, message = "Product not found"),
+            @ApiResponse(code = 404, message = "User not found")})
+    @RequiresAuthentication
+    @RequiresRoles("ADMIN" )
+    @Transactional
+    public SuccessMessageDTO sendInvoices(@RequestParam(value = "solde minimum", defaultValue = "10", required = false) final int soldemin,
+                                          @RequestParam(value = "username", defaultValue = "", required = false) final String username){
+
+        final Subject subject = SecurityUtils.getSubject();
+        User admin = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
+
+        if (!username.equalsIgnoreCase("")) {
+            User user = userRepo.findByEmail(username);
+
+            if (user == null)
+                throw new UserNotFoundException("Not found User with Username : " + username);
+
+            emailService.prepareAndSend(admin.getEmail(),
+                                        user.getEmail(),
+                                        user.getName(),
+                                        "Compte Cafétéria",
+                                        user.getSolde());
+        }
+
 
         return new SuccessMessageDTO("Check with success");
     }
@@ -255,11 +296,12 @@ public class AdminController {
         final User user3 = new User();
         user3.setActive(true);
         user3.setCreated(System.currentTimeMillis());
-        user3.setEmail("test3@test.com");
-        user3.setName("David Dupont");
+        user3.setEmail("bastian.gardel@heig-vd.ch");
+        user3.setName("Bastian Gardel");
         user3.setPassword(passwordService.encryptPassword("test"));
-        user3.getRoles().add(roleSeller);
-        user3.setSolde(100.0);
+        user3.getRoles().add(roleAdmin);
+        user3.setSolde(50.0);
+
         userRepo.save(user3);
 
         log.info("Scenario initiated.");

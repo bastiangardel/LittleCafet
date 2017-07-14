@@ -1,5 +1,6 @@
 package ch.bastiangardel.LittleCafet.tool;
 
+import ch.bastiangardel.LittleCafet.tool.product.ProductList;
 import org.jdom2.JDOMException;
 import org.testng.annotations.Test;
 

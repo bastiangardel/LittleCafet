@@ -140,6 +140,7 @@ public class User {
         this.transactions = transactions;
     }
 
+
     public User(Boolean active, Double solde, String email, String name, String password, List<Role> roles) {
         this.active = active;
         this.solde = solde;

@@ -1,4 +1,4 @@
-package ch.bastiangardel.LittleCafet.tool;
+package ch.bastiangardel.LittleCafet.tool.product;
 
 /**
  * Created by bastiangardel on 01.07.17.

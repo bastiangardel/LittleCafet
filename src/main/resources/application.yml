@@ -56,9 +56,18 @@ security.headers.xss: false
 server.error.whitelabel.enabled: false
 
 
+#########################################################################################
+
+### MAIL ###
+
+
+spring.mail.host: smtp.heig-vd.ch
+spring.mail.port: 25
+spring.mail.properties.mail.smtp.auth: false
 
 
 
+littlecafet.signature: "Bastian et Raphael"
 
 
 

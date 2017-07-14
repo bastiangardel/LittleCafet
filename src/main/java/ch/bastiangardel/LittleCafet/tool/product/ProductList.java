@@ -1,4 +1,4 @@
-package ch.bastiangardel.LittleCafet.tool;
+package ch.bastiangardel.LittleCafet.tool.product;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -35,7 +35,8 @@ public class ProductList {
 
     private List<Product> list;
 
-    private static String path = "products.xml";
+
+    String productsfilepath = "products.xml";
 
     public ProductList() throws JDOMException, IOException {
         this.list = new ArrayList<>();
@@ -43,7 +44,7 @@ public class ProductList {
 
         SAXBuilder sxb = new SAXBuilder();
 
-        Document document = sxb.build(new File(path));
+        Document document = sxb.build(new File(productsfilepath));
 
         Element racine = document.getRootElement();
 
