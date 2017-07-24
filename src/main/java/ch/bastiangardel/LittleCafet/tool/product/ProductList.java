@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ProductList {
             Product p = new Product();
 
             p.setName(courant.getChild("name").getText());
-            p.setPrice(Double.parseDouble(courant.getChild("price").getText()));
+            p.setPrice(new BigDecimal(courant.getChild("price").getText()));
 
             System.out.println(p.getName());
             System.out.println(p.getPrice());

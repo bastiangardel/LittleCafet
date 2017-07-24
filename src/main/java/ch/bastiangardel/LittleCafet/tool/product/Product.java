@@ -1,5 +1,7 @@
 package ch.bastiangardel.LittleCafet.tool.product;
 
+import java.math.BigDecimal;
+
 /**
  * Created by bastiangardel on 01.07.17.
  *
@@ -22,7 +24,7 @@ package ch.bastiangardel.LittleCafet.tool.product;
  */
 public class Product {
     String name;
-    double price;
+    BigDecimal price;
 
 
     public String getName() {
@@ -33,11 +35,11 @@ public class Product {
         this.name = name;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

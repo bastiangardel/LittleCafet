@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -141,7 +142,7 @@ public class AdminController {
         tmp.setUser(user);
         Transaction transaction = transactionRepository.save(tmp);
 
-        user.setSolde(user.getSolde() - paymentDTO.getAmount());
+        user.setSolde(user.getSolde().subtract(paymentDTO.getAmount()));
         List<Transaction>list = user.getTransactions();
         list.add(transaction);
         user.setTransactions(list);
@@ -186,7 +187,7 @@ public class AdminController {
 
             user = userRepo.findByEmail(username);
 
-            user.setSolde(user.getSolde() + transaction.getAmount());
+            user.setSolde(user.getSolde().add(transaction.getAmount()));
             List<Transaction>list = user.getTransactions();
             list.add(transaction);
             user.setTransactions(list);
@@ -282,7 +283,7 @@ public class AdminController {
         user.setName("Paulo Pires");
         user.setPassword(passwordService.encryptPassword("test"));
         user.getRoles().add(roleAdmin);
-        user.setSolde(100.0);
+        user.setSolde(BigDecimal.valueOf(100.0));
         userRepo.save(user);
 
         final User user2 = new User();
@@ -292,7 +293,7 @@ public class AdminController {
         user2.setName("Bastian Gardel");
         user2.setPassword(passwordService.encryptPassword("test"));
         user2.getRoles().add(roleSeller);
-        user2.setSolde(100.0);
+        user2.setSolde(BigDecimal.valueOf(100.0));
         userRepo.save(user2);
 
         final User user3 = new User();
@@ -302,7 +303,7 @@ public class AdminController {
         user3.setName("Bastian Gardel");
         user3.setPassword(passwordService.encryptPassword("test"));
         user3.getRoles().add(roleAdmin);
-        user3.setSolde(50.0);
+        user3.setSolde(BigDecimal.valueOf(50.0));
 
         userRepo.save(user3);
 

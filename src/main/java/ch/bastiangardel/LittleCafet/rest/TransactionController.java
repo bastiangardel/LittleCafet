@@ -102,7 +102,7 @@ public class TransactionController {
         Transaction transaction = transactionRepository.save(tmp);
 
 
-        user.setSolde(user.getSolde() + transaction.getAmount());
+        user.setSolde(user.getSolde().add(transaction.getAmount()));
         List<Transaction>list = user.getTransactions();
         list.add(transaction);
         user.setTransactions(list);

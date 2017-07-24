@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * Created by bastiangardel on 14.07.17.
  */
@@ -22,7 +24,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void prepareAndSend(String sender, String receiver, String name, String object, Double solde) {
+    public void prepareAndSend(String sender, String receiver, String name, String object, BigDecimal solde) {
 
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);

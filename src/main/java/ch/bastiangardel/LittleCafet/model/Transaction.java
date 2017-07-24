@@ -8,8 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-
-
+import java.math.BigDecimal;
 
 
 /**
@@ -50,7 +49,8 @@ public class Transaction {
     @Columns(columns={@Column(name="createdDate", columnDefinition="DATETIME(3)"),@Column(name="createdDateTZ")})
     private DateTime created;
 
-    private Double amount;
+    @Columns(columns={@Column(name="amount", columnDefinition="DECIMAL(19,2)")})
+    private BigDecimal amount;
 
     private String description;
 
@@ -59,11 +59,11 @@ public class Transaction {
     private User user;
 
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

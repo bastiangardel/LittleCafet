@@ -29,6 +29,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
         user.setName(USER_NAME);
         user.setPassword(passwordService.encryptPassword(USER_PWD));
         user.getRoles().add(roleAdmin);
-        user.setSolde(100.0);
+        user.setSolde(BigDecimal.valueOf(100.0));
         userRepo.save(user);
 
     }
@@ -141,8 +142,8 @@ public class UserControllerTest extends AbstractTestNGSpringContextTests {
                 POST, new HttpEntity<>(json, headers), String.class);
 
         HttpHeaders respheaders = response.getHeaders();
-        String set_cookie = respheaders.getFirst(respheaders.SET_COOKIE);
-        String set_cookie2 = respheaders.getFirst(respheaders.SET_COOKIE2);
+        String set_cookie = respheaders.getFirst(HttpHeaders.SET_COOKIE);
+        String set_cookie2 = respheaders.getFirst(HttpHeaders.SET_COOKIE2);
 
         System.out.println(set_cookie);
         System.out.println(set_cookie2);

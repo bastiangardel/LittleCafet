@@ -2,6 +2,8 @@ package ch.bastiangardel.LittleCafet.dto;
 
 import ch.bastiangardel.LittleCafet.model.Transaction;
 
+import java.math.BigDecimal;
+
 /**
  * Created by bastiangardel on 01.07.17.
  *
@@ -25,7 +27,7 @@ import ch.bastiangardel.LittleCafet.model.Transaction;
 public class PaymentDTO {
 
     private String username;
-    private double amount;
+    private BigDecimal amount;
     private String description;
 
     public Transaction daoToModel()
@@ -44,11 +46,11 @@ public class PaymentDTO {
         this.username = username;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

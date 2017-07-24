@@ -1,10 +1,14 @@
 package ch.bastiangardel.LittleCafet.model;
 
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by bastiangardel on 15.05.16.
@@ -46,7 +50,9 @@ public class User {
     private String name;
     private Boolean active;
     private String password;
-    private Double solde;
+
+    @Columns(columns={@Column(name="solde", columnDefinition="DECIMAL(19,2)")})
+    private BigDecimal solde;
 
     @ManyToMany
     private List<Role> roles;
@@ -121,11 +127,11 @@ public class User {
         this.roles = roles;
     }
 
-    public Double getSolde() {
+    public BigDecimal getSolde() {
         return solde;
     }
 
-    public void setSolde(Double solde) {
+    public void setSolde(BigDecimal solde) {
         this.solde = solde;
     }
 
@@ -141,7 +147,7 @@ public class User {
     }
 
 
-    public User(Boolean active, Double solde, String email, String name, String password, List<Role> roles) {
+    public User(Boolean active, BigDecimal solde, String email, String name, String password, List<Role> roles) {
         this.active = active;
         this.solde = solde;
         this.email = email;
