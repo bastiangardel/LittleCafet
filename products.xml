@@ -3,28 +3,32 @@
 <products>
     <product>
         <name>Coffee</name>
-        <image>cafe.jpg</image>
+        <icon>COFFEE</icon>
         <price>0.7</price>
+        <description>Nespresso</description>
     </product>
     <product>
         <name>PET Bottle</name>
-        <image>PET.jpg</image>
+        <icon>RECYCLE</icon>
         <price>1.5</price>
+        <description>All PET Bottle</description>
     </product>
     <product>
         <name>Ice Tea Carton</name>
-        <description>Carton</description>
-        <image>Carton.jpg</image>
+        <icon>CUBE</icon>
         <price>1</price>
+        <description>Peach and Lemon Ice Tea Carton</description>
     </product>
     <product>
         <name>Big Chocolate</name>
-        <image>BChocolate.jpg</image>
+        <icon>SQUARE</icon>
         <price>1.5</price>
+        <description>Knopers, Cailler, ...</description>
     </product>
     <product>
-        <name>little Chocolate</name>
-        <image>LChocolate.jpg</image>
+        <name>Little Chocolate</name>
+        <icon>SQUARE</icon>
         <price>0.75</price>
+        <description>Kinder, ...</description>
     </product>
 </products>

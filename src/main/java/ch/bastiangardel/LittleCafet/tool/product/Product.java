@@ -23,8 +23,10 @@ import java.math.BigDecimal;
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 public class Product {
-    String name;
-    BigDecimal price;
+    private String name;
+    private String icon;
+    private BigDecimal price;
+    private String description;
 
 
     public String getName() {
@@ -41,5 +43,21 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

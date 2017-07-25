@@ -40,9 +40,6 @@ public class ProductList {
 
     private List<Product> list;
 
-
-    //String productsfilepath = "products.xml";
-
     @Autowired
     public ProductList(ProductsFilePathLoader productsFilePathLoader) throws JDOMException, IOException {
         this.list = new ArrayList<>();
@@ -65,6 +62,8 @@ public class ProductList {
 
             p.setName(courant.getChild("name").getText());
             p.setPrice(new BigDecimal(courant.getChild("price").getText()));
+            p.setIcon(courant.getChild("icon").getText());
+            p.setDescription(courant.getChild("description").getText());
 
             System.out.println(p.getName());
             System.out.println(p.getPrice());
