@@ -1,6 +1,9 @@
 package ch.bastiangardel.LittleCafet.tool.product;
 
+import org.springframework.security.access.method.P;
+
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by bastiangardel on 01.07.17.
@@ -27,7 +30,6 @@ public class Product {
     private String icon;
     private BigDecimal price;
     private String description;
-
 
     public String getName() {
         return name;
@@ -59,5 +61,14 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Product)
+            return name.equals(((Product) obj).getName());
+        else
+            return super.equals(obj);
     }
 }

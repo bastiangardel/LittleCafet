@@ -14,12 +14,14 @@ import io.swagger.annotations.ApiResponses;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,13 +74,13 @@ public class TransactionController {
 
 
 
-    @RequestMapping(value = "/buy", method = POST)
+    @RequestMapping(value = "/buyWithID", method = POST)
     @ApiOperation(value = "Buy a product")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
                             @ApiResponse(code = 404, message = "Product not found")})
     @RequiresAuthentication
     @Transactional
-    public SuccessMessageDTO buy(@RequestParam final int idProduct){
+    public SuccessMessageDTO buyWithID(@RequestParam final int idProduct){
 
         final Subject subject = SecurityUtils.getSubject();
 
@@ -107,6 +109,51 @@ public class TransactionController {
 
         return new SuccessMessageDTO("Purchase with success");
     }
+
+    @RequestMapping(value = "/buy", method = POST)
+    @ApiOperation(value = "Buy a list of products")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny"),
+            @ApiResponse(code = 404, message = "Product not found")})
+    @RequiresAuthentication
+    @Transactional
+    public SuccessMessageDTO buy(@RequestBody List<Product> listproduct){
+
+        final Subject subject = SecurityUtils.getSubject();
+
+        User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
+
+        log.info("Buy: {}" ,listproduct);
+
+        for (Product p : listproduct){
+
+            log.info("Buy: {} - {}" , user.getEmail(), p.getName());
+
+            if (!productList.getList().contains(p))
+                throw new ProductDoestExist("Product doesn't exist !!");
+
+            Product product = productList.getList().get(productList.getList().indexOf(p));
+
+
+            Transaction tmp = new Transaction();
+            tmp.setUser(user);
+            tmp.setAmount(product.getPrice());
+            tmp.setDescription(product.getName());
+            Transaction transaction = transactionRepository.save(tmp);
+
+            user.setSolde(user.getSolde().add(transaction.getAmount()));
+            List<Transaction>list = user.getTransactions();
+            list.add(transaction);
+            user.setTransactions(list);
+            userRepo.save(user);
+
+        }
+
+
+        return new SuccessMessageDTO("Purchase with success");
+
+    }
+
+
 
     @RequestMapping(value = "/list", method = GET)
     @ApiOperation(value = "Get the logged in user's transactions list")
