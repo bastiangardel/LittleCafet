@@ -19,6 +19,7 @@ import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -159,23 +160,23 @@ public class TransactionController {
     @ApiOperation(value = "Get the logged in user's transactions list")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
-    public List<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+    public Page<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                  @RequestParam(value = "count", defaultValue = "10", required = false) int size){
 
         final Subject subject = SecurityUtils.getSubject();
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
 
-        List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
+        //List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
 
-        transactionList.sort(Comparator.comparing(Transaction::getCreated));
+/*        transactionList.sort(Comparator.comparing(Transaction::getCreated));
 
         if (transactionList.size() != 0)
         {
             log.info("Read Transaction: {}" , transactionList.get(0).getCreated());
-        }
+        }*/
 
-        return transactionList;
+        return transactionRepository.findAllByUser(user, new PageRequest(page, size));
     }
 
 

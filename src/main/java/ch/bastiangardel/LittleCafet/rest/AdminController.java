@@ -27,6 +27,7 @@ import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,7 +105,7 @@ public class AdminController {
                             @ApiResponse(code = 404, message = "User not found")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
-    public List<Transaction> getUserTransactionsList(@RequestParam String username,
+    public Page<Transaction> getUserTransactionsList(@RequestParam String username,
                                                      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                      @RequestParam(value = "count", defaultValue = "10", required = false) int size) {
 
@@ -113,14 +114,14 @@ public class AdminController {
         if (user == null)
             throw new UserNotFoundException("Not found User with Username : " + username);
 
-        List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
+        //List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
 
-        transactionList.sort(Comparator.comparing(Transaction::getCreated));
+/*        transactionList.sort(Comparator.comparing(Transaction::getCreated));
 
         for(Transaction ignored :transactionList)
-            log.info("Read Transaction: {}", transactionList.get(0).getCreated());
+            log.info("Read Transaction: {}", transactionList.get(0).getCreated());*/
 
-        return transactionList;
+        return transactionRepository.findAllByUser(user, new PageRequest(page, size));
     }
 
     @RequestMapping(value = "/payment", method = POST)

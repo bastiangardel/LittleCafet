@@ -1,14 +1,22 @@
 package ch.bastiangardel.LittleCafet.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+
 
 
 /**
@@ -36,6 +44,8 @@ import java.math.BigDecimal;
 @Table(name = "transaction")
 @EntityListeners(AuditingEntityListener.class)
 public class Transaction {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -45,9 +55,8 @@ public class Transaction {
 
 
     @CreatedDate
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTimeWithZone")
-    @Columns(columns={@Column(name="createdDate", columnDefinition="DATETIME(3)"),@Column(name="createdDateTZ")})
-    private DateTime created;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private ZonedDateTime created;
 
     @Columns(columns={@Column(name="amount", columnDefinition="DECIMAL(19,2)")})
     private BigDecimal amount;
@@ -67,11 +76,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public DateTime getCreated() {
+    public ZonedDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(DateTime created) {
+    public void setCreated(ZonedDateTime created) {
         this.created = created;
     }
 

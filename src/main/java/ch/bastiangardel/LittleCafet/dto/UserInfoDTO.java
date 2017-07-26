@@ -28,11 +28,13 @@ public class UserInfoDTO {
     private String username;
     private String name;
     private BigDecimal solde;
+    private String role;
 
     public UserInfoDTO modelToDTO(User user){
         username = user.getEmail();
         name = user.getName();
         solde = user.getSolde();
+        role = user.getRoles().get(0).getName();
         return this;
     }
 
@@ -58,5 +60,13 @@ public class UserInfoDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

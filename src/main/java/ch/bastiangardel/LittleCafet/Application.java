@@ -1,9 +1,12 @@
 package ch.bastiangardel.LittleCafet;
 
 import com.fasterxml.classmate.TypeResolver;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +35,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableSwagger2
 @ComponentScan
 @EnableJpaAuditing
-@EnableConfigurationProperties(LittlecafetProperties.class)
+@EnableConfigurationProperties({LittlecafetProperties.class})
 @Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
 public class Application {
 
