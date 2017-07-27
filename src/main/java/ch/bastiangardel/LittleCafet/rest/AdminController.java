@@ -1,5 +1,6 @@
 package ch.bastiangardel.LittleCafet.rest;
 
+import ch.bastiangardel.LittleCafet.dto.PageTransactionDTO;
 import ch.bastiangardel.LittleCafet.dto.PaymentDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
 import ch.bastiangardel.LittleCafet.exception.ProductDoestExist;
@@ -105,9 +106,9 @@ public class AdminController {
                             @ApiResponse(code = 404, message = "User not found")})
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
-    public Page<Transaction> getUserTransactionsList(@RequestParam String username,
-                                                     @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                     @RequestParam(value = "count", defaultValue = "10", required = false) int size) {
+    public PageTransactionDTO getUserTransactionsList(@RequestParam String username,
+                                                      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                      @RequestParam(value = "count", defaultValue = "10", required = false) int size) {
 
         User user = userRepo.findByEmail(username);
 
@@ -121,7 +122,7 @@ public class AdminController {
         for(Transaction ignored :transactionList)
             log.info("Read Transaction: {}", transactionList.get(0).getCreated());*/
 
-        return transactionRepository.findAllByUser(user, new PageRequest(page, size));
+        return new PageTransactionDTO().modelToDTO(transactionRepository.findAllByUser(user, new PageRequest(page, size)));
     }
 
     @RequestMapping(value = "/payment", method = POST)

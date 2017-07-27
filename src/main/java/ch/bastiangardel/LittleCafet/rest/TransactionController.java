@@ -1,5 +1,6 @@
 package ch.bastiangardel.LittleCafet.rest;
 
+import ch.bastiangardel.LittleCafet.dto.PageTransactionDTO;
 import ch.bastiangardel.LittleCafet.dto.SuccessMessageDTO;
 import ch.bastiangardel.LittleCafet.exception.ProductDoestExist;
 import ch.bastiangardel.LittleCafet.model.Transaction;
@@ -160,12 +161,13 @@ public class TransactionController {
     @ApiOperation(value = "Get the logged in user's transactions list")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "Access Deny")})
     @RequiresAuthentication
-    public Page<Transaction> getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+    public PageTransactionDTO getTransactionsList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                  @RequestParam(value = "count", defaultValue = "10", required = false) int size){
 
         final Subject subject = SecurityUtils.getSubject();
 
         User user = userRepo.findByEmail((String) subject.getSession().getAttribute("email"));
+
 
         //List<Transaction> transactionList = new ArrayList<>(transactionRepository.findAllByUser(user, new PageRequest(page, size)).getContent());
 
@@ -176,7 +178,7 @@ public class TransactionController {
             log.info("Read Transaction: {}" , transactionList.get(0).getCreated());
         }*/
 
-        return transactionRepository.findAllByUser(user, new PageRequest(page, size));
+        return new PageTransactionDTO().modelToDTO(transactionRepository.findAllByUser(user, new PageRequest(page, size)));
     }
 
 
